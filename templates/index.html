@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MemeOS 98</title>
+  <meta http-equiv="refresh" content="30">
+  <style>
+    :root {
+      --win: #c0c0c0;
+      --navy: #000080;
+      --teal: #008080;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding-bottom: 50px;
+      font-family: "MS Sans Serif", Tahoma, Verdana, sans-serif;
+      font-size: 14px;
+      background-color: var(--teal);
+      background-image:
+        radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px);
+      background-size: 18px 18px;
+      overflow-x: hidden;
+    }
+
+    /* ---------- Desktop icons ---------- */
+    .icons {
+      position: absolute; top: 14px; left: 14px;
+      display: flex; flex-direction: column; gap: 18px;
+      color: #fff; text-align: center; font-size: 12px;
+      text-shadow: 1px 1px 0 #000;
+    }
+    .icon { width: 80px; cursor: pointer; animation: bob 3s ease-in-out infinite; }
+    .icon:nth-child(2) { animation-delay: -1s; }
+    .icon:nth-child(3) { animation-delay: -2s; }
+    .icon span { display: block; font-size: 34px; }
+    @keyframes bob { 50% { transform: translateY(-5px); } }
+    @media (max-width: 800px) { .icons { display: none; } }
+
+    /* ---------- Windows ---------- */
+    .win {
+      background: var(--win);
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 2px 2px 0 #000;
+    }
+    .titlebar {
+      background: linear-gradient(90deg, var(--navy), #1084d0);
+      color: #fff; font-weight: bold;
+      padding: 3px 6px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .titlebar .btns span {
+      display: inline-block; width: 18px; height: 16px; margin-left: 2px;
+      background: var(--win); color: #000; text-align: center; line-height: 14px;
+      font-size: 12px;
+      border: 2px solid; border-color: #fff #404040 #404040 #fff;
+    }
+    .body { padding: 10px; }
+
+    .main {
+      width: min(94vw, 760px);
+      margin: 30px auto 0;
+      animation: windowOpen .5s steps(6) both;
+    }
+    @keyframes windowOpen {
+      from { transform: scale(.2); opacity: 0; }
+      to   { transform: scale(1);  opacity: 1; }
+    }
+
+    .banner {
+      background: #000; color: #0f0; font-family: "Courier New", monospace;
+      padding: 6px 10px; margin-bottom: 10px;
+      border: 2px inset #808080;
+      overflow: hidden; white-space: nowrap;
+    }
+    .banner span { display: inline-block; animation: type 6s steps(60) infinite; overflow: hidden; vertical-align: bottom; }
+    @keyframes type { 0% { width: 0; } 70%, 100% { width: 100%; } }
+    .cursor { animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .stage {
+      background: #fff;
+      border: 2px inset #808080;
+      padding: 10px;
+      min-height: 200px;
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+    .stage img {
+      max-width: 100%; max-height: 60vh;
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='26' font-size='26'>🔨</text></svg>") 4 4, pointer;
+      animation: loadIn .8s ease-out both;
+    }
+    @keyframes loadIn {
+      0%   { clip-path: inset(0 0 100% 0); filter: blur(6px); }
+      100% { clip-path: inset(0 0 0 0);    filter: blur(0); }
+    }
+    .stage img.bonk { animation: bonk .35s; }
+    @keyframes bonk {
+      0%   { transform: rotate(0) scale(1); }
+      30%  { transform: rotate(-6deg) scale(.92); }
+      60%  { transform: rotate(5deg) scale(1.04); }
+      100% { transform: rotate(0) scale(1); }
+    }
+
+    .stats {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    }
+    .btn {
+      font: inherit; cursor: pointer; padding: 6px 12px;
+      background: var(--win); color: #000;
+      border: 2px solid; border-color: #fff #404040 #404040 #fff;
+    }
+    .btn:active { border-color: #404040 #fff #fff #404040; }
+    .pill {
+      margin-left: auto; padding: 6px 10px;
+      border: 2px inset #808080; background: #fff; font-family: "Courier New", monospace;
+    }
+
+    .progress {
+      height: 20px; margin-top: 10px; border: 2px inset #808080; background: #fff; padding: 2px;
+    }
+    .progress div {
+      height: 100%;
+      background: repeating-linear-gradient(90deg, var(--navy) 0 10px, #fff 10px 12px);
+      animation: fill 30s linear forwards;
+      width: 0;
+    }
+    @keyframes fill { to { width: 100%; } }
+
+    /* ---------- Meme sticker row ---------- */
+    .stickers {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px; margin-top: 12px;
+    }
+    .sticker {
+      background: #ffffe1; border: 1px solid #000; padding: 8px;
+      font-size: 12px; text-align: left;
+      box-shadow: 3px 3px 0 rgba(0,0,0,.35);
+      transition: transform .2s;
+    }
+    .sticker:hover { transform: rotate(-3deg) scale(1.06); }
+    .sticker b { display: block; margin-bottom: 4px; font-size: 13px; }
+
+    /* ---------- Stonks ticker ---------- */
+    .ticker {
+      margin-top: 12px; border: 2px inset #808080; background: #000; color: #0f0;
+      font-family: "Courier New", monospace; overflow: hidden; white-space: nowrap; padding: 4px 0;
+    }
+    .ticker div { display: inline-block; padding-left: 100%; animation: tick 26s linear infinite; }
+    @keyframes tick { to { transform: translateX(-100%); } }
+    .up { color: #0f0; } .down { color: #f33; }
+
+    /* ---------- Fake error popups ---------- */
+    .popup {
+      position: fixed; width: 260px; z-index: 50;
+      animation: popup .25s steps(4) both;
+    }
+    .popup .body { display: flex; gap: 10px; align-items: center; }
+    .popup .ico { font-size: 28px; }
+    @keyframes popup { from { transform: scale(0); } to { transform: scale(1); } }
+    .popup .x { cursor: pointer; }
+
+    /* ---------- Taskbar ---------- */
+    .taskbar {
+      position: fixed; left: 0; right: 0; bottom: 0; height: 38px;
+      background: var(--win);
+      border-top: 2px solid #fff;
+      display: flex; align-items: center; gap: 8px; padding: 0 6px;
+      z-index: 100;
+    }
+    .start { font-weight: bold; }
+    .task { flex: 1; font-size: 12px; }
+    .clock { border: 2px inset #808080; padding: 4px 10px; font-size: 12px; }
+
+    /* ---------- Falling emojis ---------- */
+    .fall {
+      position: fixed; top: -40px; font-size: 28px; pointer-events: none; z-index: 40;
+      animation: fall linear forwards;
+    }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="icons">
+    <div class="icon"><span>🗑️</span>Recycle Bin (full of cringe)</div>
+    <div class="icon"><span>📁</span>Definitely Not Memes</div>
+    <div class="icon"><span>💾</span>Homework_FINAL_v7</div>
+  </div>
+
+  <div class="win main">
+    <div class="titlebar">
+      <div>🖼️ MemeExplorer.exe — r/{{ subreddit }}</div>
+      <div class="btns"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="body">
+      <div class="banner"><span>C:\MEMES&gt; downloading serotonin... buffering... skill issue detected</span><span class="cursor">█</span></div>
+
+      <div class="stage">
+        <img id="meme" src="{{ meme_url }}" alt="Random meme from r/{{ subreddit }}" title="Click to BONK">
+      </div>
+
+      <div class="stats">
+        <button class="btn" id="fbtn">Press F to pay respects</button>
+        <button class="btn" id="stonks">📈 Stonks</button>
+        <button class="btn" onclick="location.reload()">⟳ Next meme</button>
+        <div class="pill">F: <span id="f">0</span> | Bonks: <span id="b">0</span></div>
+      </div>
+
+      <div class="progress"><div></div></div>
+
+      <div class="stickers">
+        <div class="sticker"><b>Nobody:</b>Me at 3 AM: refreshing for one more meme</div>
+        <div class="sticker"><b>Expectation</b>Productive day. Reality: 47 tabs, 0 progress</div>
+        <div class="sticker"><b>One does not</b>simply watch just one meme</div>
+        <div class="sticker"><b>This is fine</b>Code compiles. Nobody knows why.</div>
+        <div class="sticker"><b>Ratio + L</b>+ didn't ask + touch grass</div>
+        <div class="sticker"><b>Sus</b>That meme was kinda sus, ngl</div>
+      </div>
+
+      <div class="ticker">
+        <div>
+          MEME STOCK: <span class="up">DANK ▲ 420.69</span> &nbsp;|&nbsp;
+          <span class="down">CRINGE ▼ 0.01</span> &nbsp;|&nbsp;
+          <span class="up">STONKS ▲ 9001</span> &nbsp;|&nbsp;
+          <span class="up">BONK ▲ 69</span> &nbsp;|&nbsp;
+          <span class="down">TOUCHGRASS ▼ -1</span> &nbsp;|&nbsp;
+          <span class="up">NO_CAP ▲ 100%</span> &nbsp;|&nbsp;
+          BREAKING: local dev says "it works on my machine"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <button class="btn start">⊞ Start</button>
+    <div class="task">MemeExplorer.exe — next refresh in <span id="count">30</span>s</div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+
+  <script>
+    // ----- Countdown + clock -----
+    let t = 30;
+    const countEl = document.getElementById("count");
+    setInterval(() => { t = Math.max(0, t - 1); countEl.textContent = t; }, 1000);
+    function tickClock() {
+      const d = new Date();
+      document.getElementById("clock").textContent =
+        d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+    tickClock(); setInterval(tickClock, 15000);
+
+    // ----- Emoji rain -----
+    function rain(emoji, n) {
+      for (let i = 0; i < n; i++) {
+        const s = document.createElement("div");
+        s.className = "fall";
+        s.textContent = emoji;
+        s.style.left = Math.random() * 100 + "vw";
+        s.style.animationDuration = 2 + Math.random() * 2.5 + "s";
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 5000);
+      }
+    }
+
+    // ----- F counter -----
+    let f = 0;
+    document.getElementById("fbtn").onclick = () => {
+      f++; document.getElementById("f").textContent = f; rain("🫡", 6);
+    };
+
+    // ----- Stonks -----
+    document.getElementById("stonks").onclick = () => rain("📈", 14);
+
+    // ----- Bonk the meme -----
+    let b = 0;
+    const meme = document.getElementById("meme");
+    meme.addEventListener("click", () => {
+      b++; document.getElementById("b").textContent = b;
+      meme.classList.remove("bonk"); void meme.offsetWidth; meme.classList.add("bonk");
+      rain("🔨", 3);
+    });
+
+    // ----- Fake error popups -----
+    const errors = [
+      ["⚠️", "Error 404: Brain not found"],
+      ["❌", "Too much funny. Please reduce memes."],
+      ["💀", "Fatal exception: skill issue"],
+      ["ℹ️", "Your cringe level is critically high."],
+      ["🔥", "This is fine. Everything is fine."],
+      ["❓", "Do you want to continue procrastinating?"],
+    ];
+    function spawnPopup() {
+      const [ico, msg] = errors[Math.floor(Math.random() * errors.length)];
+      const p = document.createElement("div");
+      p.className = "win popup";
+      p.style.left = 5 + Math.random() * 60 + "vw";
+      p.style.top  = 10 + Math.random() * 55 + "vh";
+      p.innerHTML =
+        '<div class="titlebar"><div>MemeOS</div><div class="btns"><span class="x">×</span></div></div>' +
+        '<div class="body"><div class="ico">' + ico + '</div><div>' + msg + '</div></div>' +
+        '<div class="body" style="justify-content:center;padding-top:0"><button class="btn x">OK</button></div>';
+      p.querySelectorAll(".x").forEach(x => x.onclick = () => p.remove());
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 6000);
+    }
+    setTimeout(spawnPopup, 3000);
+    setInterval(spawnPopup, 9000);
+  </script>
+</body>
+</html>
